@@ -3,10 +3,15 @@ const cors = require("cors");
 const mercadopago = require("mercadopago");
 const app = express();
 
-app.use(express.json());
-app.use(cors());
+// CONFIGURACIÓN CORRECTA DE CORS
+app.use(cors({
+  origin: "*", // Permite que cualquier dispositivo se conecte
+  methods: ["GET", "POST"]
+}));
 
-// Configura tu Access Token privado
+app.use(express.json());
+
+// Tu Access Token privado
 mercadopago.configure({
   access_token: "APP_USR-7110963948036985-030207-944c1b4fded96aa6af15d583a9983e50-3234524541"
 });
@@ -28,7 +33,6 @@ app.post("/create_preference", async (req, res) => {
     };
 
     const response = await mercadopago.preferences.create(preference);
-    // Devolvemos el ID de preferencia generado
     res.json({ id: response.body.id });
   } catch (error) {
     console.error("Error en Mercado Pago:", error);
@@ -36,7 +40,6 @@ app.post("/create_preference", async (req, res) => {
   }
 });
 
-// CORRECCIÓN: Puerto dinámico para Render
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor de pagos activo en puerto ${PORT}`);
