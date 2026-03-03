@@ -28,10 +28,16 @@ app.post("/create_preference", async (req, res) => {
     };
 
     const response = await mercadopago.preferences.create(preference);
+    // Devolvemos el ID de preferencia generado
     res.json({ id: response.body.id });
   } catch (error) {
-    res.status(500).send("Error al crear preferencia");
+    console.error("Error en Mercado Pago:", error);
+    res.status(500).json({ error: "Error al crear la preferencia" });
   }
 });
 
-app.listen(3000, () => console.log("Servidor de pagos activo en puerto 3000"));
+// CORRECCIÓN: Puerto dinámico para Render
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor de pagos activo en puerto ${PORT}`);
+});
